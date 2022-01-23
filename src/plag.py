@@ -6,6 +6,7 @@ import glob
 
 import os
 
+
 # this is used to interract with the computer's OS
 
 # defining a function to compare the strings using levenshtein's algorithm
@@ -54,6 +55,12 @@ def checkPlagFunc(path):
         return False
     output = {}
     for i in range(0, len(myFiles)):
+        with open(myFiles[i], 'r') as file:
+            fileName = os.path.basename(file.name).replace(".txt", '')
+
+        output[fileName] = {'plag': False, 'plagWith': [], 'plagPercentage': plag_final} #initialize
+
+    for i in range(0, len(myFiles)):
         for j in range(i, len(myFiles)):
 
             with open(myFiles[i], 'r') as file:
@@ -71,12 +78,15 @@ def checkPlagFunc(path):
             else:
                 length = len(str2)
             if (myFiles[i] != myFiles[j]):
-
                 plag_final = 100 - round((levenshtein(str1, str2) / length) * 100, 2)
                 if (plag_final > plag_percent):
                     print("For the files", file1Name, "and", file2Name, plag_final, "% plagiarised\n")
-                    output[file1Name] = {'plag': True, 'plagWith': file2Name, 'plagPercentage': plag_final}
-                    output[file2Name] = {'plag': True, 'plagWith': file1Name, 'plagPercentage': plag_final}
+                    output[file1Name]['plag'] = True
+                    output[file1Name]['plagWith'].append(file2Name)
+                    output[file1Name]['plagPercentage'] = plag_percent
+                    output[file2Name]['plag'] = True
+                    output[file2Name]['plagWith'].append(file1Name)
+                    output[file2Name]['plagPercentage'] = plag_final
                     k = k + 1
                 else:
                     print('No Plag', plag_final)
