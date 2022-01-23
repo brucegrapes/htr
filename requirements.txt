@@ -7,3 +7,6 @@ opencv-python==4.4.0.46
 path==15.0.0
 tensorflow==2.4.0
 tf-nightly-gpu
+flask~=2.0.2
+Werkzeug~=2.0.1
+setuptools~=58.1.0

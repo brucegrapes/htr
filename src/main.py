@@ -148,8 +148,6 @@ def getText(model: Model, fn_img: Path) -> None:
     return recognized[0]
 
 
-
-
 def main():
     """Main function."""
     parser = argparse.ArgumentParser()
@@ -211,6 +209,7 @@ def main():
         txtFile = open(completeName, "w+")
         txtFile.write(text)
         txtFile.close()
+
 
 
 
