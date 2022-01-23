@@ -1,0 +1,10 @@
+data/words*
+data/words.txt
+src/__pycache__/
+notes/
+venv2/
+venv/
+*.so
+*.pyc
+.idea/
+dump/
