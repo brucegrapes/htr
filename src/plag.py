@@ -6,7 +6,6 @@ import glob
 
 import os
 
-
 # this is used to interract with the computer's OS
 
 # defining a function to compare the strings using levenshtein's algorithm
@@ -43,23 +42,29 @@ def levenshtein(seq1, seq2):
 
 def checkPlagFunc(path):
     plag_percent = int(20)
-    os.chdir(path)
-    myFiles = glob.glob('*.txt')
+    # os.chdir(path)
+    print(path, 'plag path')
+    myFiles = glob.glob(path + '/*.txt')
     print("\nThe text files available are :\n")
     print(myFiles)
     print("\n")
     plag_final = 0
-    k=0
+    k = 0
+    if (len(myFiles)) < 2:
+        return False
+    output = {}
     for i in range(0, len(myFiles)):
         for j in range(i, len(myFiles)):
 
             with open(myFiles[i], 'r') as file:
                 data = file.read().replace('\n', '')
                 str1 = data.replace(' ', '')
+                file1Name = os.path.basename(file.name).replace(".txt", '')
 
             with open(myFiles[j], 'r') as file:
                 data = file.read().replace('\n', '')
                 str2 = data.replace(' ', '')
+                file2Name = os.path.basename(file.name).replace(".txt", '')
 
             if (len(str1) > len(str2)):
                 length = len(str1)
@@ -69,9 +74,13 @@ def checkPlagFunc(path):
 
                 plag_final = 100 - round((levenshtein(str1, str2) / length) * 100, 2)
                 if (plag_final > plag_percent):
-                    print("For the files", myFiles[i], "and", myFiles[j], plag_final, "% plagiarised\n")
+                    print("For the files", file1Name, "and", file2Name, plag_final, "% plagiarised\n")
+                    output[file1Name] = {'plag': True, 'plagWith': file2Name, 'plagPercentage': plag_final}
+                    output[file2Name] = {'plag': True, 'plagWith': file1Name, 'plagPercentage': plag_final}
                     k = k + 1
                 else:
                     print('No Plag', plag_final)
+
+    return output
 # performing three types of checking
 # one for entire folder with masterfile, one for two separate files , one for all files within the folder

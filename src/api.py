@@ -1,4 +1,4 @@
-from flask import Flask, flash, request, redirect, url_for, send_from_directory
+from flask import Flask, flash, request, redirect, url_for, send_from_directory,jsonify
 from werkzeug.utils import secure_filename
 import os
 
@@ -24,8 +24,8 @@ def allowed_file(filename):
 def welcome():
     return 'Welcome'
 
-@app.route('/upload_file', methods=['GET', 'POST'])
-def upload_file():
+@app.route('/upload_file/<topic>', methods=['GET', 'POST'])
+def upload_file(topic):
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -39,12 +39,18 @@ def upload_file():
             flash('No selected file')
             print('No Selected file')
             return redirect(request.url)
+        imageFolder = app.config['UPLOAD_FOLDER'] + '/' + topic
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            print(os.path.join(app.config['UPLOAD_FOLDER'],filename))
-            createTextFromImages(os.path.join(app.config['UPLOAD_FOLDER']), filename)
-            return redirect(url_for('download_file', name=filename))
+            if not os.path.exists(imageFolder):
+                os.makedirs(imageFolder)
+
+            print(imageFolder, filename)
+            file.save(os.path.join(imageFolder, filename))
+
+            text = createTextFromImages(imageFolder, filename,topic)
+            data = {'success':bool('true'),'message':'Uploaded Successfully','recognized_text':text}
+            return jsonify(data), 200
     return '''
     <!doctype html>
     <title>Upload new File</title>
@@ -54,10 +60,14 @@ def upload_file():
       <input type=submit value=Upload>
     </form>
     '''
-@app.route('/check_plag', methods=['GET'])
-def check_plag():
-    checkPlagFunc(app.config['TEXT_OUTPUT_FOLDER'])
-    return 'Working'
+@app.route('/check_plag/<topic>', methods=['GET'])
+def check_plag(topic):
+    output = checkPlagFunc(app.config['TEXT_OUTPUT_FOLDER']+'/'+topic)
+    if output == False:
+        return jsonify({'success':False,'message':'Minimum Two files required to check plagarisim'})
+
+    data = {'success':'true','output':output}
+    return jsonify(data),200
 
 
 @app.route('/uploads/<name>')

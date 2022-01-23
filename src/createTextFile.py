@@ -49,7 +49,7 @@ def getText(model: Model, fn_img: Path) -> None:
     print(f'Probability: {probability[0]}')
     return recognized[0]
 
-def createTextFromImages(filePath,fileName):
+def createTextFromImages(filePath,fileName,outputFolderName):
     parser = argparse.ArgumentParser()
     parser.add_argument('--dump', help='Dump output of NN to CSV file(s).', action='store_true')
     decoder_mapping = {'bestpath': DecoderType.BestPath,
@@ -59,9 +59,13 @@ def createTextFromImages(filePath,fileName):
     decoder_type = decoder_mapping['bestpath']
     model = Model(list(open(FilePaths.fn_char_list).read()), decoder_type, must_restore=True, dump=args.dump)
     text = getText(model, filePath+'/'+fileName)
-    name_of_file = 'plag'
-    completeName = os.path.join(FilePaths.save_path, fileName + ".txt")
+    outputFolderName = FilePaths.save_path + outputFolderName
+    if not os.path.exists(outputFolderName):
+        os.makedirs(outputFolderName)
+
+    completeName = os.path.join(outputFolderName, fileName.split('.')[0] + ".txt")
     print('Plag', text)
     txtFile = open(completeName, "w+")
     txtFile.write(text)
     txtFile.close()
+    return text
