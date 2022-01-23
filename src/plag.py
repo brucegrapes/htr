@@ -42,7 +42,7 @@ def levenshtein(seq1, seq2):
 
 
 def checkPlagFunc(path):
-    plag_percent = int(20)
+    plag_percent = int(40)
     # os.chdir(path)
     print(path, 'plag path')
     myFiles = glob.glob(path + '/*.txt')
@@ -58,7 +58,7 @@ def checkPlagFunc(path):
         with open(myFiles[i], 'r') as file:
             fileName = os.path.basename(file.name).replace(".txt", '')
 
-        output[fileName] = {'plag': False, 'plagWith': [], 'plagPercentage': plag_final} #initialize
+        output[fileName] = {'plag': False, 'plagWith': [], 'plagPercentage': 0} #initialize
 
     for i in range(0, len(myFiles)):
         for j in range(i, len(myFiles)):
@@ -83,7 +83,7 @@ def checkPlagFunc(path):
                     print("For the files", file1Name, "and", file2Name, plag_final, "% plagiarised\n")
                     output[file1Name]['plag'] = True
                     output[file1Name]['plagWith'].append(file2Name)
-                    output[file1Name]['plagPercentage'] = plag_percent
+                    output[file1Name]['plagPercentage'] = plag_final
                     output[file2Name]['plag'] = True
                     output[file2Name]['plagWith'].append(file1Name)
                     output[file2Name]['plagPercentage'] = plag_final
