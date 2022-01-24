@@ -63,7 +63,7 @@ def createTextFromImages(filePath,fileName,outputFolderName):
     if not os.path.exists(outputFolderName):
         os.makedirs(outputFolderName)
 
-    completeName = os.path.join(outputFolderName, fileName.split('.')[0] + ".txt")
+    completeName = os.path.join(outputFolderName, fileName.split('.png')[0] + ".txt")
     print('Plag', text)
     txtFile = open(completeName, "w+")
     txtFile.write(text)
