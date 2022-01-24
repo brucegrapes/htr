@@ -44,7 +44,8 @@ def upload_file(topic):
             return redirect(request.url)
         imageFolder = app.config['UPLOAD_FOLDER'] + '/' + topic
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
+            data = request.form.get('id')
+            filename = secure_filename(data+'.png')
             if not os.path.exists(imageFolder):
                 os.makedirs(imageFolder)
 

@@ -10,3 +10,4 @@ tf-nightly-gpu
 flask~=2.0.2
 Werkzeug~=2.0.1
 setuptools~=58.1.0
+flask_cors
