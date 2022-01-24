@@ -5,7 +5,10 @@ import os
 from createTextFile import createTextFromImages
 from plag import checkPlagFunc
 
+from flask_cors import CORS
+
 app = Flask(__name__)
+CORS(app)
 app.config['SECRET_KEY'] = 'A-Z1-9' #<--- SECRET_KEY must be set in config to access session
 
 UPLOAD_FOLDER = '../input-images'
@@ -80,4 +83,4 @@ app.add_url_rule(
 )
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host="localhost", port=8000)
